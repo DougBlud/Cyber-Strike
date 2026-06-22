@@ -1,11 +1,12 @@
-# Space Adventure - Trabalho de p5.js
+# Cyber Strike - Trabalho de p5.js
 
-## 👥 Integrantes
+## 👥 Integrante
 * Douglas Henrique do Prado
-* [Nome do Integrante 2]
 
 ## 📺 Vídeo de Apresentação
-* [Link do Vídeo no Youtube](https://youtube.com/...)
+* [Link do Vídeo no YouTube](https://youtu.be/trVK3k5-urg)
+
+> Se preferir, deixe o vídeo como não listado.
 
 ## 🕹️ Como Jogar
 1. Abra o arquivo `index.html` em qualquer navegador (ou utilize a extensão Live Server do VS Code).

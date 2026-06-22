@@ -5,8 +5,10 @@ let inimigos = [];
 let lasers = [];
 let particulas = [];
 let score = 0;
-let vidas = 3;
+let vidas = 10;
 let fase = 1;
+let faseMostrar = 0;
+let contagemFase = 0;
 
 // PALETA DE CORES DOS INIMIGOS (Muda a cada fase)
 // Fase 1: Amarelo, Fase 2: Laranja, Fase 3: Roxo, Fase 4: Azul, Fase 5: Verde
@@ -56,12 +58,12 @@ function mousePressed() {
 
 function keyPressed() {
   if (tela === "MENU") {
-    if (key === '1' || keyCode === 97) { 
-      reiniciarJogo(); 
-      tela = "JOGO"; 
+    if (key === '1' || keyCode === 97) {
+      reiniciarJogo();
+      tela = "JOGO";
     }
-    if (key === '2' || keyCode === 98) { 
-      tela = "SOBRE"; 
+    if (key === '2' || keyCode === 98) {
+      tela = "SOBRE";
     }
   } else if (tela === "SOBRE" || tela === "GAMEOVER") {
     if (keyCode === ESCAPE) {
@@ -72,8 +74,10 @@ function keyPressed() {
 
 function reiniciarJogo() {
   score = 0;
-  vidas = 3;
+  vidas = 10;
   fase = 1;
+  faseMostrar = 0;
+  contagemFase = 0;
   jogador = new Jogador();
   inimigos = [];
   lasers = [];
@@ -95,16 +99,22 @@ function resetarNeon() {
 // --- TELAS DO MENU E PROGRESSÃO ---
 function desenharMenu() {
   textAlign(CENTER, CENTER);
-  
+
   aplicarNeon("#00ffcc", 20);
-  textSize(50);
-  text("CYBER STRIKE", width / 2, height / 2 - 60);
-  
+  textSize(52);
+  text("CYBER STRIKE", width / 2, height / 2 - 80);
+
   aplicarNeon("#ff007f", 10);
-  textSize(20);
-  text("[1] INICIAR JOGO", width / 2, height / 2 + 20);
-  text("[2] SOBRE / CRÉDITOS", width / 2, height / 2 + 60);
+  textSize(22);
+  text("[1] INICIAR JOGO", width / 2, height / 2 - 10);
+  text("[2] SOBRE / CRÉDITOS", width / 2, height / 2 + 30);
+
   resetarNeon();
+  fill(200);
+  textSize(16);
+  text("Use as setas ou A / D para mover a nave", width / 2, height / 2 + 90);
+  text("Clique com o mouse para atirar nos inimigos", width / 2, height / 2 + 120);
+  text("Pressione [ESC] a qualquer momento para voltar ao menu", width / 2, height - 50);
 }
 
 function desenharSobre() {
@@ -119,7 +129,7 @@ function desenharSobre() {
   text("Desenvolvido por:", width / 2, height / 2 - 30);
   textSize(18);
   fill(200);
-  text("Douglas Henrique do Prado\n[Integrante 2]\n[Integrante 3]", width / 2, height / 2 + 20);
+  text("Douglas Henrique do Prado\n", width / 2, height / 2 + 20);
   
   fill(100);
   text("Pressione [ESC] para voltar", width / 2, height - 50);
@@ -149,9 +159,30 @@ function desenharHUD() {
   text(`FASE: ${fase}`, 20, 70);
 }
 
+function desenharTransicaoFase() {
+  textAlign(CENTER, CENTER);
+  aplicarNeon("#ffffff", 25);
+  textSize(36);
+  text(`FASE ${faseMostrar}`, width / 2, height / 2);
+  resetarNeon();
+  fill(200);
+  textSize(18);
+  text("Prepare-se para inimigos mais rápidos!", width / 2, height / 2 + 50);
+}
+
 // --- DINÂMICA PRINCIPAL DO JOGO ---
 function executarJogo() {
   desenharHUD();
+
+  if (faseMostrar > 0) {
+    desenharTransicaoFase();
+    contagemFase++;
+    if (contagemFase > 90) {
+      faseMostrar = 0;
+      contagemFase = 0;
+    }
+    return;
+  }
 
   jogador.atualizar();
   jogador.desenhar();
@@ -187,7 +218,11 @@ function executarJogo() {
         lasers.splice(i, 1);
         score += 10;
         
-        if (score % 100 === 0) fase++;
+        if (score % 100 === 0) {
+          fase++;
+          faseMostrar = fase;
+          contagemFase = 0;
+        }
         break;
       }
     }
